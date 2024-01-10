@@ -1,10 +1,15 @@
+"use client";
+
 import { AppBar, Box, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
 const ProjAppBar = () => {
+  const { username } = useGlobalContext();
+
   return (
     <React.Fragment>
       <Box sx={{ flexGrow: 1 }}>
@@ -21,7 +26,7 @@ const ProjAppBar = () => {
             </Button>
             <Box px={1.5}></Box>
             <Button variant="text" startIcon={<PersonOutlineOutlinedIcon />} sx={{ color: "#FFFFFF" }}>
-              Login
+              {username !== "" ? username : "Login"}
             </Button>
           </Toolbar>
         </AppBar>

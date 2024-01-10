@@ -9,6 +9,7 @@ import ProjAppBar from "./components/ProjAppBar";
 // import theme from "../utils/theme";
 // import { ThemeProvider } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
+import { GlobalContextProvider } from "./contexts/GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       {/* <body className={inter.className}>{children}</body> */}
       <ThemeRegistry>
-        <body className={inter.className}>{children}</body>
+        <GlobalContextProvider>
+          <body className={inter.className}>{children}</body>
+        </GlobalContextProvider>
       </ThemeRegistry>
     </html>
   );

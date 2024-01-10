@@ -1,28 +1,31 @@
-import { Box, Button, Container, Grid, Link, TextField, Typography } from "@mui/material";
+import { Button, Container, Grid, Link, TextField, Typography } from "@mui/material";
+import { Formik, useFormik } from "formik";
 import React from "react";
-import ProjAppBar from "./ProjAppBar";
-import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { User } from "../models/user";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "../contexts/GlobalContext";
+// import cookie from "cookie-cutter";
 
-const Register = () => {
+const LoginComponent = () => {
   const [result, setResult] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
+  const { setUsername, setAccessToken } = useGlobalContext();
   const router = useRouter();
+  var cookie = require("cookie-cutter");
 
   /**
-   * Registers user with the server
-   * @param user - User data to register
+   *
+   * @param user
    */
-  const register = async (user: User) => {
-    const url = "http://localhost:3001/register";
+  const login = async (user: any) => {
+    const url = "http://localhost:3001/login";
     try {
       const response = await axios.post(url, user);
-      console.log(`${JSON.stringify(response.data)}`);
-      setResult(response.data.result);
-      router.push("/login");
+      cookie.set("access_token", response.data.token);
+      setAccessToken(response.data.token);
+      setUsername(response.data.username);
+      router.push("/");
       setError("");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -37,23 +40,19 @@ const Register = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().min(2, "Must be 2 characters or more").max(25, "Must be 25 characters or less").required("Name is required"),
       email: Yup.string().email("Invalid email address").required("Email is required"),
       password: Yup.string().min(6, "password must be 6 characters or more").required("Password is required"),
-      confirmPassword: Yup.string().min(6, "password must be 6 characters or more").required("Password is required"),
     }),
     onSubmit: async (values) => {
       // setTimeout(() => {
       //   alert(JSON.stringify(values, null, 2));
       // }, 5000);
       // alert(JSON.stringify(values, null, 2));
-      await register(values);
+      await login(values);
     },
   });
 
@@ -63,7 +62,7 @@ const Register = () => {
         <Container>
           <Grid container spacing={2} pt={2} px={{ md: 25 }}>
             <Grid item xs={12}>
-              <Typography variant="h4">Register</Typography>
+              <Typography variant="h4">Login</Typography>
             </Grid>
             {result && (
               <Grid item xs={12} color={"green"}>
@@ -75,19 +74,6 @@ const Register = () => {
                 <Typography variant="h6">{error}</Typography>
               </Grid>
             )}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="name"
-                name="name"
-                label="Name"
-                variant="outlined"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors.name)}
-                helperText={formik.errors.name}
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -116,22 +102,8 @@ const Register = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="confirmPassword"
-                name="confirmPassword"
-                label="Confirm password"
-                variant="outlined"
-                type="password"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors.confirmPassword)}
-                helperText={formik.errors.confirmPassword}
-              />
-            </Grid>
-            <Grid item xs={12}>
               <Button variant="contained" fullWidth type="submit" disabled={!formik.isValid || formik.isSubmitting}>
-                Register
+                Login
               </Button>
             </Grid>
           </Grid>
@@ -151,4 +123,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default LoginComponent;

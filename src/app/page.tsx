@@ -4,6 +4,8 @@ import React from "react";
 import { AppBar, Box, Button, IconButton, Link, TextField, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProjAppBar from "./components/ProjAppBar";
+import HomeComponent from "./components/Home";
+import { GlobalContextProvider } from "./contexts/GlobalContext";
 
 // import Link from "next/link";
 // import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -37,5 +39,10 @@ import ProjAppBar from "./components/ProjAppBar";
 }
 
 export default function Home() {
-  return <React.Fragment></React.Fragment>;
+  return (
+    <React.Fragment>
+      <ProjAppBar></ProjAppBar>
+      <HomeComponent></HomeComponent>
+    </React.Fragment>
+  );
 }
